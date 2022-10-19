@@ -22,6 +22,9 @@ $Background: rgb(245, 244, 249);
 $White: white;
 $SecondColor: rgb(132, 4, 4, 4);
 
+a:link, a:visited, a:active {
+  text-decoration:none;
+}
 
 * {
   box-sizing: content-box;

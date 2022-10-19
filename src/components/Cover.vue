@@ -17,7 +17,7 @@ export default {
           <p class="firstText">Todos merecen un</p>
           <p class="maintext">delicioso postre</p>
           <p class="lastText">para disfrutar</p>
-          <RouterLink to="/about">
+          <RouterLink to="/menu">
             <ButtonOn class="covertext__btn"> Nuestros productos </ButtonOn>
           </RouterLink>
         </div>

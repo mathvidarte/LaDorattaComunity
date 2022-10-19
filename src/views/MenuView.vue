@@ -38,7 +38,7 @@ export default {
         const nameB = b.titlee.toUpperCase(); // ignore upper and lowercase
         console.log(nameA);
         if (nameA > nameB) {
-          return -1;
+          return 1;
         }
         if (nameA < nameB) {
           return -1;
@@ -158,7 +158,7 @@ export default {
         </div>
       </aside>
       <div class="allProducts">
-        <ProductCard
+        <ProductCard class="cards"
           v-for="product in allProducts"
           :key="product"
           :image="product.image"
@@ -216,7 +216,7 @@ export default {
     margin-top: 30px;
 
     .filters {
-      position: absolute;
+      position: fixed;
       background-color: $White;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
       width: 250px;
@@ -255,6 +255,10 @@ export default {
     margin-left: 270px;
     border-left: 2px solid #cfced1;
     padding-left: 20px;
+
+    .cards {
+      text-decoration:none;
+    }
   }
 }
 </style>

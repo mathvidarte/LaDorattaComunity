@@ -47,7 +47,7 @@ export const useProductsStore = defineStore("products", {
                 docs.forEach((document) => {
                     
                     this.product = {
-                        //image: document.data().image,
+                        image: document.data().image.url,
                         titlee: document.data().titlee,
                         category: document.data().category,
                         description: document.data().description,

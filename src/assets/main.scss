@@ -37,16 +37,6 @@ body {
   background-color: $Background;
 }
 
-/*body{
-  box-sizing: content-box;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-body {
-  background-color: $Background;
-}*/
-
 .header__a {
   position: fixed;
   width: 100vw;
@@ -167,7 +157,6 @@ footer {
   align-items: center;
   background-color: $MainColorGold;
   color: $White;
-  margin-top: 50px;
 
   img {
       width: 100px;

@@ -1,84 +1,21 @@
 import { defineStore } from 'pinia'
+//------------Firestore-------------
+import { collection, addDoc, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { db } from '../firebase/config';
+
+//-----------Storage-----------------
+import { ref as stRef, getDownloadURL, uploadBytes, } from "firebase/storage";
+import { storage } from '../firebase/config';
+
+//-----------RT Database-----------------
+import { ref as dbRef, push, set, } from "firebase/database";
+import { database } from '../firebase/config';
+
 
 export const useProductsStore = defineStore("products", {
     state: () => ({
-        products: [
-            {
-                image: '/imgs/redvelvet.png',
-                titlee: 'Red velvet Queen',
-                category: 'Cake',
-                description: '3 layers de cake esponjoso de red velvet con relleno de buttercream y decorado con una corona de grageas doradas.',
-                rating: '5',
-                price: '25000'
-            },
-            {
-                image: '/imgs/cupcakes.png',
-                titlee: 'Cupcakes de oreo',
-                category: 'Cupcakes',
-                description: 'Cupcakes de chocolate con buttercream de vainilla decorados con chips de chocolate, ganache y galleta oreo.',
-                rating: '4',
-                price: '26000'
-            },
-            {
-                image: '/imgs/ayno.jpg',
-                titlee: 'Meme Cake',
-                category: 'Cake',
-                description: 'Delicioso cake decorado con el famoso meme',
-                rating: '4',
-                price: '25000'
-            },
-            {
-                image: '/imgs/chococookies.jpg',
-                titlee: 'Chococookies',
-                category: 'Cake',
-                description: 'Cake de chocolate con galletas de chips de chocolate y buttercream',
-                rating: '3',
-                price: '110000'
-            },
-            {
-                image: '/imgs/cookies.png',
-                titlee: 'Number Cookie',
-                category: 'Cookies',
-                description: 'Dos cookies de almendra con relleno de cheesecream y decorada con chocolates y fresas',
-                rating: '4',
-                price: '80000'
-            },
-            {
-                image: '/imgs/lemoncurd.JPG',
-                titlee: 'Cupcake de limon',
-                category: 'Cupcakes',
-                description: 'Cupcakes de limón con relleno de curd de limon y merengue italiano de limón',
-                rating: '5',
-                price: '30000'
-            },
-            {
-                image: '/imgs/redvelvetlindos.JPG',
-                titlee: 'Red velvet Cupcakes',
-                category: 'Cupcakes',
-                description: 'Cupcakes de red velvet y buttercream',
-                rating: '5',
-                price: '24000'
-            },
-            {
-                image: 'imgs/pies.png',
-                titlee: 'Pie de limón',
-                category: 'Pies',
-                description: 'Pie de galleta y relleno de limón decorado con almibar y fresas',
-                rating: '5',
-                price: '35000'
-            },
-            {
-                image: '/imgs/donuts.png',
-                titlee: 'Torre de Donuts',
-                category: 'Donuts',
-                description: 'Torre de donas con galseado de color y decorada con flores',
-                rating: '4',
-                price: '90000'
-            },
-
-            
-        ],
-        localStorageProducts:[],
+        products: [],
+        product: {},
     }),
     getters: {
         //Los 3 puntos son una reestructuración, me clonan el arreglo para no afectar el arreglo principla
@@ -86,20 +23,94 @@ export const useProductsStore = defineStore("products", {
     },
     //En actions estan los metodos de lo que necesito
     actions: {
-        newProduct(product) {
-            this.localStorageProducts.push(product);
-            this.products.push(product);
-            localStorage.setItem('products', JSON.stringify(this.localStorageProducts))
+        async newProduct(product) {
+
+            try {
+                const docRef = await addDoc(collection(db, "product"), {
+                    //image: product.image,
+                    titlee: product.titlee,
+                    category: product.category,
+                    description: product.description,
+                    rating: '4',
+                    price: product.price,
+                    flavour: product.flavour,
+                });
+                console.log("SUBIO AL DATABASE: ", docRef.id);
+            } catch (e) {
+                console.error("NO SUBIO :( ", e);
+            }
         },
 
         loadProducts() {
-            this.localStorageProducts = JSON.parse(localStorage.getItem('products'))
-            this.products = this.products.concat([...this.localStorageProducts])
+
+            onSnapshot(collection(db, "product"), (docs) => {
+                docs.forEach((document) => {
+                    
+                    this.product = {
+                        //image: document.data().image,
+                        titlee: document.data().titlee,
+                        category: document.data().category,
+                        description: document.data().description,
+                        rating: '4',
+                        price: document.data().price,
+                        flavour: document.data().flavour,
+                        id: document.id,
+                    };
+                    //console.log("aqui es doc",doc.data().product.titlee);
+                    this.products.push(this.product);
+
+                    updateDoc(doc(db, "product", document.id), this.product);
+                })
+
+            });
+        },
+
+        uploadImage(image) {
+
+            // Get a reference to the storage service, which is used to create references in your storage bucket
+            const databaseReference = dbRef(database, "files");
+
+            // Create a storage reference from our storage service
+            const storageRef = stRef(storage, "files/" + image.name);
+
+            uploadBytes(storageRef, image).then((snapshot) => {
+                var newFileRef = push(databaseReference);
+
+                set(newFileRef, {
+                    "name": image.name
+                }),
+                    console.log('Uploaded a blob or file!');
+
+            })
+        },
+
+        downloadUrImage(image) {
+
+            // Create a storage reference from our storage service
+            const storageRef = stRef(storage, "/files/" + image.name);
+
+            getDownloadURL(storageRef)
+                .then(async (url) => {
+                    try {
+                        let imgName = image.name;
+                        console.log("imagennnnnnn", imgName)
+                        let infoImg = {
+                            url,
+                            imgName,
+                        }
+                        updateDoc(doc(db, "product", this.product.id), {
+                            "image": infoImg,
+                        });
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                    }
+                }
+                );
         },
 
         getProductById(id) {
             const filteredProducts = this.products.filter((product) => id.toLowerCase() === product.titlee.toLowerCase());
-            return filteredProducts ? {...filteredProducts[0] } : null
+            return filteredProducts ? { ...filteredProducts[0] } : null
         },
     },
 })

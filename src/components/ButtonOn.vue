@@ -28,6 +28,20 @@ export default {
       border-radius: 0px;
       color: $SecondColor;
     }
+    &--small {
+      width: 180px;
+      margin-right: 10px;
+    }
+
+    &--smallWhite {
+      width: 180px;
+      margin-right: 10px;
+      background-color: $White;
+    }
+    &--white {
+      background-color: $White;
+      color: $MainColorGold;
+    }
 }
 
 

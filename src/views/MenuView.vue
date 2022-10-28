@@ -19,10 +19,11 @@ export default {
 
   mounted() {
     this.productsHere = this.productsStore.getProducts;
+    
   },
 
   methods: {
-    orderPrice(e) {
+   /* orderPrice(e) {
       console.log(e);
       if (e == "mayormenor") {
         this.productsHere.sort((a, b) => a.price - b.price);
@@ -59,13 +60,18 @@ export default {
             e.toLowerCase().replace(/ /g, "")
         );
       } 
+    },*/
+
+    leerProduct() {
+      console.log(this.productsStore.loadProducts());
+      console.log( "que hay en productHere",this.productsHere[0].titlee);
     }
   },
 
   computed: {
     ...mapStores(useProductsStore),
     allProducts() {
-      return this.productsStore.getProducts;
+      return this.productsHere = this.productsStore.getProducts;
     },
   },
 };
@@ -79,7 +85,7 @@ export default {
 
       <div @change="filterCategory(this.selectedCategory)" class="headerCategories">
         <input v-model="selectedCategory" type="radio" id="all" name="category" value="todos">
-        <label for="all">Todos</label>
+        <label for="all" @click="leerProduct">Todos</label>
 
         <input v-model="selectedCategory" type="radio" id="cakes" name="category" value="Cakes">
         <label for="cakes">Cakes</label>

@@ -86,7 +86,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "src/assets/main.scss";
 
 .containerLogin {
@@ -161,6 +161,15 @@ export default {
     font-family: "Work Sans", sans-serif;
     font-weight: inherit;
     margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .containerLogin {
+    padding: 0px 10px 20px 10px;
+    .login {
+      width: 100%;
+    }
   }
 }
 </style>

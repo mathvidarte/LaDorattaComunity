@@ -10,9 +10,9 @@ export default {
    <template>
   <div class="container">
     <section class="cover">
-      <img class="backgroundcover" src="../assets/imgs/backgroundCover.png" />
+      <img class="backgroundcover" src="../../public/imgs/backgroundCover.png" />
       <div class="coverInfo">
-        <img src="../assets/imgs/CheesecakeOver.png" />
+        <img src="../../public/imgs/CheesecakeOver.png" />
         <div class="covertext">
           <p class="firstText">Todos merecen un</p>
           <p class="maintext">delicioso postre</p>
@@ -135,7 +135,7 @@ export default {
 
       .cta {
         bottom: -50px;
-        right: -60px;
+        right: -70px;
       }
     }
   }

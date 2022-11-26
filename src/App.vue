@@ -46,20 +46,25 @@ export default {
       this.menub = !this.menub;
     },
 
-    logOut (e) {
-        e.preventDefault();
-        this.authenticationStore.logOut();
+    logOut(e) {
+      e.preventDefault();
+      this.authenticationStore.logOut();
+    },
+
+    deleteUser (e) {
+      console.log("prueba")
+      e.preventDefault();
+      this.authenticationStore.deleteUser();
     }
   },
   watch: {
     userIsLogged(newUser, oldUser) {
-      console.log("...",newUser);
+      console.log("...", newUser);
       if (newUser) {
         this.$router.push("/");
-        
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -68,7 +73,7 @@ export default {
     <nav class="nav__a">
       <div class="logoDiv">
         <RouterLink to="/">
-          <img class="logoimg" src="./assets/logofull.svg" />
+          <img class="logoimg" src="/imgs/logofull.svg" />
         </RouterLink>
       </div>
       <div class="linksDiv">
@@ -78,7 +83,7 @@ export default {
       </div>
       <div class="search">
         <input type="text" placeholder="Buscar" />
-        <button type="button"><img src="./assets/icons/search.svg" /></button>
+        <button type="button"><img src="/imgs/icons/search.svg" /></button>
       </div>
       <div class="logging" v-if="!userIsLogged">
         <RouterLink to="/logIn">
@@ -94,37 +99,46 @@ export default {
       </div>
       <div class="logging" v-else>
         <!--<RouterLink to="/">-->
-          <ButtonOn
-            type="button"
-            class="button_on button_on--white logOutBtn"
-            @click="logOut"
-            >Cerrar sesión</ButtonOn
-          >
+        <ButtonOn
+          type="button"
+          class="button_on button_on--white logOutBtn"
+          @click="logOut"
+          >Cerrar sesión</ButtonOn
+        >
+        <ButtonOn
+          type="button"
+          class="button_on button_on--white logOutBtn"
+          @click="deleteUser"
+          >Eliminar cuenta</ButtonOn
+        >
         <!--</RouterLink>-->
       </div>
 
       <div class="networks">
+        <RouterLink to="/favorite">
+          <img class="favP" src="/imgs/icons/favwhitel.svg" alt="" />
+        </RouterLink>
         <a href="https://wa.me/573205036398"
-          ><img class="whatsapppicon" src="./assets/icons/whatsapp.svg"
+          ><img class="whatsapppicon" src="/imgs/icons/whatsapp.svg"
         /></a>
         <a href="https://www.instagram.com/la_doratta/"
-          ><img src="./assets/icons/instagram.svg" alt="" />
+          ><img src="/imgs/icons/instagram.svg" alt="" />
         </a>
       </div>
     </nav>
 
     <div class="nav__b">
       <div @click="openMenuB">
-        <img src="src/assets/icons/MenuB.svg" />
+        <img src="/imgs/icons/MenuB.svg" />
       </div>
 
       <div class="logo__b">
         <RouterLink to="/">
-          <img class="logoimg" src="./assets/logofull.svg" />
+          <img class="logoimg" src="/imgs/logofull.svg" />
         </RouterLink>
       </div>
 
-      <div class="search__b"><img src="src/assets/icons/search.svg" /></div>
+      <div class="search__b"><img src="/imgs/icons/search.svg" /></div>
     </div>
   </header>
 
@@ -159,10 +173,10 @@ export default {
 
   <RouterView />
   <footer>
-    <img src="src/assets/logofull.svg" />
+    <img src="/imgs/logofull.svg" />
     <div class="menu__networks--respo">
-      <img class="icon" src="src/assets/icons/whatsapp.svg" />
-      <img class="icon" src="src/assets/icons/instagram.svg" />
+      <img class="icon" src="/imgs/icons/whatsapp.svg" />
+      <img class="icon" src="/imgs/icons/instagram.svg" />
     </div>
     <section class="infofooter">
       <a

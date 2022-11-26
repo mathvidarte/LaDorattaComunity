@@ -22,25 +22,31 @@ export default {
   font-size: 20px;
   height: 40px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer
 
     &--card {
       background-color: $White;
       border-radius: 0px;
       color: $SecondColor;
+      cursor: pointer
     }
     &--small {
       width: 180px;
       margin-right: 10px;
+      cursor: pointer
     }
 
     &--smallWhite {
       width: 180px;
       margin-right: 10px;
       background-color: $White;
+      cursor: pointer
     }
     &--white {
       background-color: $White;
       color: $MainColorGold;
+      width: 180px;
+      cursor: pointer
     }
 }
 

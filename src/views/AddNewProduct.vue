@@ -8,29 +8,6 @@ export default {
     ButtonOn,
   },
 
-  computed: {
-    ...mapStores(useProductsStore),
-    allProducts() {
-      return this.productsStore.getProducts;
-    },
-
-    isUploadImage() {
-      return this.myProduct.image != null;
-    },
-  },
-
-  watch: {
-    isUploadImage(imgAdd, imgNotAdd) {
-      if (imgAdd == true) {
-        console.log("HAY IMG", imgAdd);
-        this.productsStore.downloadUrImage(this.myProduct.image);
-
-      }else{
-        console.log("NO HAY IMG", imgAdd);
-      }
-    },
-  },
-
   data() {
     return {
       image: [],
@@ -40,15 +17,45 @@ export default {
       rating: "",
       price: "",
       flavour: [],
-
       myProduct: [],
     };
   },
 
+  computed: {
+    ...mapStores(useProductsStore),
+    /*allProducts() {
+      return this.productsStore.getProducts;
+    },*/
+
+    /*isUploadImage() {
+      return this.myProduct.image != null;
+    },*/
+  },
+  /*watch: {
+    isUploadImage(imgAdd, imgNotAdd) {
+      if (imgAdd == true) {
+        console.log("HAY IMG", imgAdd);
+        this.productsStore.downloadUrlImage(this.myProduct.image);
+        this.productsStore.newProduct(this.myProduct);
+      }else{
+        console.log("NO HAY IMG", imgAdd);
+      }
+    },
+  },*/
+  
   methods: {
+
+    newFile(e) {
+      //cosole.log("ODIO ESTA MARICADA");
+      var files = e.target.files;
+      this.image = files[0];
+      this.productsStore.uploadImage(this.image);
+      console.log("files", this.image);
+    },
+
     createNewProduct() {
       this.myProduct = {
-        image: this.image,
+        image: this.image.name,
         titlee: this.titlee,
         category: this.category,
         description: this.description,
@@ -56,31 +63,17 @@ export default {
         price: this.price,
         flavour: this.flavour,
       };
-
       //console.log(myProduct);
       //console.log(myProduct.image)
-      console.log(this.myProduct.image);
-      this.productsStore.uploadImage(this.myProduct.image);
+      
       this.productsStore.newProduct(this.myProduct);
+      console.log('Manda ',this.myProduct.image);
+      
     },
-
-    imageUpload() {
+    /*imageUpload() {
       return this.productsStore.uploadImage(this.myProduct.image);
-    },
-
-    newFile(e) {
-      var files = e.target.files;
-      console.log("files", files);
-      this.image = files[0];
-      console.log("image", files[0].name);
-
-      /*const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        this.image = reader.result;
-        console.log("image", this.image);
-      });
-      reader.readAsDataURL(files[0]);*/
-    },
+    },*/
+    
   },
 };
 </script>
@@ -194,7 +187,7 @@ export default {
       <div class="itemForm">
         <label class="text"> Imagen: </label>
         <input
-          class=""
+        class=""
           id="myFile"
           type="file"
           accept=".jpg, .jpeg, .png"
@@ -212,7 +205,6 @@ export default {
 
 <style lang="scss">
 @import "src/assets/main.scss";
-
 .productoForm {
   margin: 0px;
   width: 100vw;
@@ -222,7 +214,6 @@ export default {
   align-items: center;
   background-color: $MainColorGold;
   width: auto;
-
   &__title {
     color: $White;
     font-size: $TitleTwo;
@@ -230,26 +221,22 @@ export default {
     font-style: italic;
     margin-top: 100px;
   }
-
   &__form {
     display: flex;
     flex-direction: column;
     margin-top: 30px;
     background-color: $Background;
     padding: 20px;
-
     .itemForm {
       display: flex;
       flex-direction: column;
     }
-
     .checkContainer {
       display: flex;
       flex-direction: row;
       gap: 20px;
     }
   }
-
   select {
     border: 2px solid $MainColorGold;
     color: $MainColorGold;
@@ -257,13 +244,27 @@ export default {
     height: 30px;
     margin-bottom: 10px;
   }
-
   input {
     border: 2px solid $MainColorGold;
     color: $MainColorGold;
     background: transparent;
     height: 30px;
     margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 600px) { 
+  .productoForm {
+    padding: 0px 10px;
+    &__form {
+      padding: 10px;
+      margin-top: 20px;
+    }
+
+    .checkContainer {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
   }
 }
 </style>

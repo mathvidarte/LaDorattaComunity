@@ -87,7 +87,7 @@ export default {
 
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "src/assets/main.scss";
 
 .containerLogin {
@@ -175,4 +175,13 @@ export default {
     .logOutBtn {
     }
 }
+
+@media screen and (max-width: 600px) {
+  .containerLogin {
+    padding: 0px 10px 20px 10px;
+    .login {
+      width: 100%;
+    }
+  }
+ }
 </style>

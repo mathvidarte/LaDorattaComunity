@@ -1,7 +1,10 @@
 <script>
+import { RouterLink, RouterView } from "vue-router";
 import ProductCard from "../components/ProductCard.vue";
 import { mapStores } from "pinia";
 import { useProductsStore } from "../stores/products";
+import { useAuthenticationStore } from "../stores/authentication";
+import ButtonOn from "../components/ButtonOn.vue";
 
 export default {
   data() {
@@ -14,8 +17,11 @@ export default {
     };
   },
   components: {
+    RouterLink, 
+    RouterView,
     ProductCard,
-  },
+    ButtonOn
+},
 
   mounted() {
     this.productsHere = this.productsStore.getProducts;
@@ -23,7 +29,7 @@ export default {
   },
 
   methods: {
-   /* orderPrice(e) {
+    orderPrice(e) {
       console.log(e);
       if (e == "mayormenor") {
         this.productsHere.sort((a, b) => a.price - b.price);
@@ -34,20 +40,33 @@ export default {
 
     orderName(e) {
       console.log(e);
+      //this.productsStore.orderByName(selected);
+      
       this.productsHere.sort((a, b) => {
+        console.log("a",a.titlee);
+        console.log("b",b.titlee);
         const nameA = a.titlee.toUpperCase(); // ignore upper and lowercase
         const nameB = b.titlee.toUpperCase(); // ignore upper and lowercase
-        console.log(nameA);
-        if (nameA > nameB) {
-          return 1;
+        //console.log("Name A",nameA);
+        //console.log("Name B",nameB);
+        if (e === 'ZA') {
+          console.log("Hola estoy en AZ");
+          if (nameA < nameB) {
+            return -1;
+          }
         }
-        if (nameA < nameB) {
-          return -1;
+
+        if (e === 'AZ') {
+          console.log("Hola estoy en ZA")
+          if (nameA > nameB) {
+            return -1;
+          }
         }
 
         // names must be equal
         return 0;
       });
+      console.log(this.productsHere);
     },
 
     filterCategory (e) {
@@ -60,18 +79,19 @@ export default {
             e.toLowerCase().replace(/ /g, "")
         );
       } 
-    },*/
-
-    leerProduct() {
-      console.log(this.productsStore.loadProducts());
-      console.log( "que hay en productHere",this.productsHere[0].titlee);
-    }
+    },
   },
 
   computed: {
-    ...mapStores(useProductsStore),
+    ...mapStores(useProductsStore, useAuthenticationStore),
     allProducts() {
       return this.productsHere = this.productsStore.getProducts;
+    },
+    userIsAdmin() {
+      return this.authenticationStore.user.tipo == "admin";
+    },
+    userIsLogged() {
+      return this.authenticationStore.user !== null;
     },
   },
 };
@@ -85,24 +105,27 @@ export default {
 
       <div @change="filterCategory(this.selectedCategory)" class="headerCategories">
         <input v-model="selectedCategory" type="radio" id="all" name="category" value="todos">
-        <label for="all" @click="leerProduct">Todos</label>
+        <label for="all" @click="todos">Todos</label>
 
         <input v-model="selectedCategory" type="radio" id="cakes" name="category" value="Cakes">
-        <label for="cakes">Cakes</label>
+        <label for="cakes" @click="cakes">Cakes</label>
 
         <input v-model="selectedCategory" type="radio" id="cupcakes" name="category" value="Cupcakes">
-        <label for="cupcakes">Cupcakes</label>
+        <label for="cupcakes" @click="cupcakes">Cupcakes</label>
 
         <input v-model="selectedCategory" type="radio" id="cookies" name="category" value="Cookies">
-        <label for="cookies">Cookies</label>
+        <label for="cookies" @click="cookies">Cookies</label>
 
         <input v-model="selectedCategory" type="radio" id="pies" name="category" value="Pies">
-        <label for="pies">Pies</label>
+        <label for="pies" @click="pies">Pies</label>
 
         <input v-model="selectedCategory" type="radio" id="donuts" name="category" value="Donuts">
-        <label for="donuts">Donuts</label>
+        <label for="donuts" @click="donuts">Donuts</label>
 
       </div>
+      <RouterLink to="/addnew">
+      <ButtonOn v-if="userIsLogged" >Agregar nuevo producto</ButtonOn>
+    </RouterLink>
     </div>
     <div class="ourProducts__body">
       <aside class="filters">
@@ -123,10 +146,11 @@ export default {
               <option value="Limon">Limón</option>
             </select>
           </div>-->
+          
         </div>
         <div class="order">
           <div class="filtersTitle">
-            <img src="src/assets/icons/filter.svg" />
+            <img src="/imgs/icons/filter.svg" />
             <p>Ordenar</p>
           </div>
           <div class="filtersCategories">
@@ -157,8 +181,8 @@ export default {
               class="row__month"
             >
               <option value="">Ninguno</option>
-              <option value="AZ">Z - A</option>
-              <option value="ZA">A -> Z</option>
+              <option value="AZ">A - Z</option>
+              <option value="ZA">Z -> A</option>
             </select>
           </div>
         </div>
@@ -183,7 +207,7 @@ export default {
 <style lang="scss">
 @import "src/assets/main.scss";
 .banners {
-  background-image: url(src/assets/imgs/Products/bannerProducts.png);
+  background-image: url(../../public/imgs/Products/bannerProducts.png);
   background-size: cover;
   background-repeat: no-repeat !important;
   z-index: -5;
@@ -204,7 +228,7 @@ export default {
       display: flex;
       color: $MainColorGold;
       gap: 40px;
-      margin-top: 20px;
+      margin: 20px 0px;
 
       input {
         position: absolute;  
@@ -219,13 +243,14 @@ export default {
   &__body {
     display: flex;
     width: 100%;
-    margin-top: 30px;
+    margin: 30px 0px;
 
     .filters {
-      position: fixed;
+      position: relative;
       background-color: $White;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
       width: 250px;
+      height: auto;
 
       .filtersCategories {
         display: flex;
@@ -258,7 +283,7 @@ export default {
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 60px;
-    margin-left: 270px;
+    margin-left: 20px;
     border-left: 2px solid #cfced1;
     padding-left: 20px;
 
@@ -267,4 +292,26 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 600px) {
+  .ourProducts {
+    margin: 0px 10px;
+
+    &__header {
+      .headerCategories {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap:2px;
+        margin:20px 0px 0px 0px;
+      }
+    }
+
+    &__body {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+
+ }
 </style>

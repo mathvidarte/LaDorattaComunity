@@ -3,7 +3,7 @@ $BodyText: 'DM Sans', sans-serif;
 
 @font-face {
   font-family: titleFont;
-  src: url(./font/Qalisha\ Signature\ Serif\ Italic.woff);
+  src: url(../assets/font/Qalisha-Signature-Serif-Italic.ttf);
 }
 
 $TitleFonts: titleFont;
@@ -104,6 +104,7 @@ body {
       text-decoration: none;
 
     }
+
   }
 
   .networks {
@@ -113,10 +114,23 @@ body {
       margin-right: 10px;
     }
   }
+  .favP {
+    width:34px;
+    margin-right: 10px;
+  }
 
   .nav__b {
     display: none;
   }
+  
+
+  .logging {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+  
 }
 
 .onScroll {

@@ -7,91 +7,141 @@ import { useAuthenticationStore } from "../stores/authentication";
 import ButtonOn from "../components/ButtonOn.vue";
 
 export default {
-  data() {
-    return {
-      orderSelected: "",
-      orderNameSelected: "",
-      selectedCategory: "",
-
-      productsHere: [],
-    };
-  },
   components: {
-    RouterLink, 
+    RouterLink,
     RouterView,
     ProductCard,
-    ButtonOn
-},
-
-  mounted() {
-    this.productsHere = this.productsStore.getProducts;
-    
+    ButtonOn,
   },
 
-  methods: {
-    orderPrice(e) {
-      console.log(e);
-      if (e == "mayormenor") {
-        this.productsHere.sort((a, b) => a.price - b.price);
-      } else if (e == "menormayor") {
-        this.productsHere.sort((a, b) => b.price - a.price);
-      }
-    },
+  data() {
+    return {
+      currentProduct: [],
+      getAllProducts: [],
+      arrayProductHere: [],
 
-    orderName(e) {
-      console.log(e);
-      //this.productsStore.orderByName(selected);
-      
-      this.productsHere.sort((a, b) => {
-        console.log("a",a.titlee);
-        console.log("b",b.titlee);
-        const nameA = a.titlee.toUpperCase(); // ignore upper and lowercase
-        const nameB = b.titlee.toUpperCase(); // ignore upper and lowercase
-        //console.log("Name A",nameA);
-        //console.log("Name B",nameB);
-        if (e === 'ZA') {
-          console.log("Hola estoy en AZ");
-          if (nameA < nameB) {
-            return -1;
-          }
-        }
+      orderSelected: "",
+      orderNameSelected: "",
+      selectedCategory: [],
+      selectedFlavourSelected: [],
+    };
+  },
 
-        if (e === 'AZ') {
-          console.log("Hola estoy en ZA")
-          if (nameA > nameB) {
-            return -1;
-          }
-        }
-
-        // names must be equal
-        return 0;
-      });
-      console.log(this.productsHere);
-    },
-
-    filterCategory (e) {
-      console.log(e)
-
-      if (e != "") {
-        this.productsHere.filter(
-          (product) =>
-            product.category.toLowerCase().replace(/ /g, "") ==
-            e.toLowerCase().replace(/ /g, "")
-        );
-      } 
-    },
+  mounted() {
+    this.getAllProducts = this.productsStore.getProducts;
+    this.currentProduct = JSON.parse(JSON.stringify(this.getAllProducts));
+    this.arrayProductHere = this.currentProduct;
   },
 
   computed: {
     ...mapStores(useProductsStore, useAuthenticationStore),
-    allProducts() {
-      return this.productsHere = this.productsStore.getProducts;
+    getProducts() {
+      return this.productsStore.getProducts;
     },
     userIsAdmin() {
       return this.authenticationStore.user.tipo == "admin";
     },
     userIsLogged() {
       return this.authenticationStore.user !== null;
+    },
+  },
+
+  watch: {
+    getProducts(newProduct, oldProduct) {
+      if (newProduct.length !== 0) {
+        this.getEverything();
+      }
+    },
+  },
+
+  methods: {
+    resetFilter() {
+      this.arrayProductHere = this.getAllProducts;
+      this.orderSelected = "";
+      this.orderNameSelected = "";
+      this.selectedCategory = [];
+      this.selectedFlavourSelected = [];
+    },
+
+    getEverything() {
+      this.getAllProducts = this.productsStore.getProducts;
+      this.currentProduct = JSON.parse(JSON.stringify(this.getAllProducts));
+      this.arrayProductHere = this.currentProduct;
+    },
+
+    orderPrice(e) {
+      console.log(e);
+      if (e == "mayormenor") {
+        this.arrayProductHere.sort((b, a) => a.price - b.price);
+        this.orderNameSelected == "";
+      } else if (e == "menormayor") {
+        this.arrayProductHere.sort((a, b) => a.price - b.price);
+        this.orderNameSelected == "";
+      } else if (e == "") {
+        this.arrayProductHere = this.getAllProducts;
+      }
+    },
+
+    orderName(e) {
+      console.log(e);
+
+      this.arrayProductHere.sort((a, b) => {
+        console.log("a", a.titlee);
+        console.log("b", b.titlee);
+        const nameA = a.titlee.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.titlee.toUpperCase(); // ignore upper and lowercase
+        if (e === "ZA") {
+          console.log("Hola estoy en AZ");
+          if (nameA > nameB) {
+            return -1;
+          }
+          this.orderPrice = "";
+        }
+
+        if (e === "AZ") {
+          console.log("Hola estoy en ZA");
+          if (nameA < nameB) {
+            return -1;
+          }
+          this.orderPrice = "";
+        }
+
+        // names must be equal
+        if (e == "") {
+          return 0;
+        }
+      });
+    },
+
+    filterFlavour(e) {
+      console.log("lo que llega", e);
+      //var p = [];
+      if (e != "") {
+        this.arrayProductHere = this.currentProduct.filter(
+          (product) =>
+            product.flavour[0] === e
+            //(p.push(product.flavour[0]))
+        );
+
+        //console.log("lo que hay: ", p)
+
+      } else {
+        this.arrayProductHere = this.getAllProducts;
+      }
+    },
+
+    filterCategory(e) {
+      console.log(e);
+
+      if (e != "") {
+        this.arrayProductHere = this.currentProduct.filter(
+          (product) =>
+            product.category === e
+        );
+      }
+       if (e == "todos") {
+        this.arrayProductHere = this.getAllProducts;
+      }
     },
   },
 };
@@ -103,50 +153,91 @@ export default {
     <div class="ourProducts__header">
       <h1 class="ourProducts__title title title--gold">Nuestros productos</h1>
 
-      <div @change="filterCategory(this.selectedCategory)" class="headerCategories">
-        <input v-model="selectedCategory" type="radio" id="all" name="category" value="todos">
-        <label for="all" @click="todos">Todos</label>
+      <div
+        @change="filterCategory(this.selectedCategory)"
+        class="headerCategories"
+      >
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="all"
+          name="category"
+          value="todos"
+        />
+          <label for="all" @click="todos">Todos</label>
 
-        <input v-model="selectedCategory" type="radio" id="cakes" name="category" value="Cakes">
-        <label for="cakes" @click="cakes">Cakes</label>
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="cakes"
+          name="category"
+          value="Cake"
+        />
+          <label for="cakes" @click="cakes">Cakes</label>
 
-        <input v-model="selectedCategory" type="radio" id="cupcakes" name="category" value="Cupcakes">
-        <label for="cupcakes" @click="cupcakes">Cupcakes</label>
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="cupcakes"
+          name="category"
+          value="Cupcakes"
+        />
+          <label for="cupcakes" @click="cupcakes">Cupcakes</label>
 
-        <input v-model="selectedCategory" type="radio" id="cookies" name="category" value="Cookies">
-        <label for="cookies" @click="cookies">Cookies</label>
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="cookies"
+          name="category"
+          value="Cookies"
+        />
+          <label for="cookies" @click="cookies">Cookies</label>
 
-        <input v-model="selectedCategory" type="radio" id="pies" name="category" value="Pies">
-        <label for="pies" @click="pies">Pies</label>
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="pies"
+          name="category"
+          value="Pies"
+        />
+          <label for="pies" @click="pies">Pies</label>
 
-        <input v-model="selectedCategory" type="radio" id="donuts" name="category" value="Donuts">
-        <label for="donuts" @click="donuts">Donuts</label>
-
+        <input
+          v-model="selectedCategory"
+          type="radio"
+          id="donuts"
+          name="category"
+          value="Donuts"
+        />
+          <label for="donuts" @click="donuts">Donuts</label>
       </div>
       <RouterLink to="/addnew">
-      <ButtonOn v-if="userIsLogged" >Agregar nuevo producto</ButtonOn>
-    </RouterLink>
+        <ButtonOn v-if="userIsLogged">Agregar nuevo producto</ButtonOn>
+      </RouterLink>
     </div>
     <div class="ourProducts__body">
       <aside class="filters">
         <div class="filter">
-          <!--  <div class=filtersTitle>
-            <img src="src/assets/icons/filter.svg"/>
+          <div class="filtersTitle">
+            <img src="../../public/imgs/icons/filter.svg" />
             <p class="text">Filtros</p>
           </div>
           <div class="filtersCategories">
-          <label>Sabor</label>
-            <select class="row__month">
+            <label>Sabor</label>
+            <select
+              @change="filterFlavour(this.filterFlavourSelected)"
+              v-model="this.filterFlavourSelected"
+              class="row__month"
+            >
               <option value="">Todos</option>
-              <option value="Redvelvet">Red Velvet</option>
+              <option value="Red Velvet">Red Velvet</option>
               <option value="Naranja">Narnaja con amapola</option>
               <option value="Vainilla">Vainilla</option>
               <option value="Chocolate">Chocolate</option>
               <option value="Zanahoria">Zanahoria</option>
               <option value="Limon">Limón</option>
             </select>
-          </div>-->
-          
+          </div>
         </div>
         <div class="order">
           <div class="filtersTitle">
@@ -188,13 +279,15 @@ export default {
         </div>
       </aside>
       <div class="allProducts">
-        <ProductCard class="cards"
-          v-for="product in allProducts"
+        <ProductCard
+          class="cards"
+          v-for="product in arrayProductHere"
           :key="product"
           :image="product.image"
           :titlee="product.titlee"
           :category="product.category"
           :description="product.description"
+          :flavour="product.flavour"
           :rating="product.rating"
           :price="product.price"
         >
@@ -231,12 +324,12 @@ export default {
       margin: 20px 0px;
 
       input {
-        position: absolute;  
-        opacity: 0;  
+        position: absolute;
+        opacity: 0;
       }
-      label {  
-        cursor: pointer;  
-}  
+      label {
+        cursor: pointer;
+      }
     }
   }
 
@@ -288,7 +381,7 @@ export default {
     padding-left: 20px;
 
     .cards {
-      text-decoration:none;
+      text-decoration: none;
     }
   }
 }
@@ -301,8 +394,8 @@ export default {
       .headerCategories {
         flex-direction: row;
         flex-wrap: wrap;
-        gap:2px;
-        margin:20px 0px 0px 0px;
+        gap: 2px;
+        margin: 20px 0px 0px 0px;
       }
     }
 
@@ -311,7 +404,5 @@ export default {
       align-items: center;
     }
   }
-
-
- }
+}
 </style>

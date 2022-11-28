@@ -49,7 +49,6 @@ onAuthStateChanged(auth, (user) => {
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
       authStores.user=user;
-      console.log("User loggeado",authStores.user)  
     } else {
       authStores.user=null;
       console.log("User vacío",authStores.user)  

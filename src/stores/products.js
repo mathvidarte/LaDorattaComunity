@@ -114,20 +114,5 @@ export const useProductsStore = defineStore("products", {
             const filteredProducts = this.products.filter((eachProduct) => id.toLowerCase().replace(/ /g, "") === eachProduct.titlee.toLowerCase().replace(/ /g, ""));
             return filteredProducts ? { ...filteredProducts[0] } : null
         },
-
-        orderByName(add) {
-            //add = collection(db, "product");
-            console.log("productToOrder",this.add);
-            //const q = query(this.add, orderBy("titlee"));
-            
-            /*console.log("productsCollection", productsCollection)
-            console.log("orderNameSelected", this.orderNameSelected);
-            if (this.orderNameSelected) {
-                switch (this.orderNameSelected) {
-                    case 'AZ':
-                        productsCollection = productsCollection.orderBy('name', 'asc');
-                }
-            }*/
-        }
     },
 })

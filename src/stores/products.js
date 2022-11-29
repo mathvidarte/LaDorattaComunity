@@ -114,5 +114,19 @@ export const useProductsStore = defineStore("products", {
             const filteredProducts = this.products.filter((eachProduct) => id.toLowerCase().replace(/ /g, "") === eachProduct.titlee.toLowerCase().replace(/ /g, ""));
             return filteredProducts ? { ...filteredProducts[0] } : null
         },
+
+        async edit (currentItemUID, itemToEdit, info) {
+            console.log("id", currentItemUID, "item", itemToEdit, "info", info)
+
+            try {
+                await updateDoc(doc(db, "product", currentItemUID), {
+                    [itemToEdit]: info,
+                });
+                alert("El producto se actualizó")
+            } catch (error) {
+                console.log(error.message)
+            }
+            
+        }
     },
 })

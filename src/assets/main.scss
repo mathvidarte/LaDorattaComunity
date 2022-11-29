@@ -37,6 +37,22 @@ body {
   background-color: $Background;
 }
 
+.input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-color: white;
+  color: white;
+  background: transparent;
+  margin-bottom: 10px;
+  height: 33px;
+
+  &.--gold {
+    border-color: $MainColorGold;
+    color: $MainColorGold;
+  }
+}
+
 .header__a {
   position: fixed;
   width: 100vw;

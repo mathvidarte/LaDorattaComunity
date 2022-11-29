@@ -2,11 +2,13 @@
 import { mapStores } from "pinia";
 import { useProductsStore } from "../stores/products";
 import ButtonOn from "../components/ButtonOn.vue";
+import EditBtn from "../components/EditBtn.vue";
 
 export default {
 
   components: {
     ButtonOn,
+    EditBtn,
   },
 
   data() {
@@ -14,6 +16,11 @@ export default {
   },
   computed: {
     ...mapStores(useProductsStore),
+
+    productInfo () {
+      return this.currentProduct = this.productsStore.getProductById(
+      this.$route.params.id)
+    }
   },
   mounted() {
     this.currentProduct = this.productsStore.getProductById(
@@ -25,14 +32,27 @@ export default {
 
 <template>
     
-    <div class="product">
+    <div class="product" v-if="this.productInfo">
       <div class="product__container">
-        <img :src="currentProduct.image" class="product__img"/>
+        <EditBtn></EditBtn>
+        <img :currentItemUID="currentProduct.id" itemToEdit="image" :src="this.currentProduct.image.url" class="product__img"/>
           <div class="productText">
-            <h1 class="title title--gold productName">{{ currentProduct.titlee }}</h1>
-            <p class="text productInfo"> {{ currentProduct.category }}</p>
-            <p class="text productInfo">{{ currentProduct.description }}</p>
-            <p class="text productInfo"> {{ currentProduct.price }}</p>
+            <div class="productText__part">
+              <h1 class="title title--gold productName">{{ this.currentProduct.titlee }}</h1>
+              <EditBtn :currentItemUID="currentProduct.id" itemToEdit="titlee"></EditBtn>
+            </div>
+            <div class="productText__part">
+              <p class="text productInfo"> {{ this.currentProduct.category }}</p>
+              <EditBtn :currentItemUID="currentProduct.id" itemToEdit="category"></EditBtn>
+            </div>
+            <div class="productText__part">
+              <p class="text productInfo">{{ this.currentProduct.description }}</p>
+              <EditBtn :currentItemUID="currentProduct.id" itemToEdit="description"></EditBtn>
+            </div>
+            <div class="productText__part">
+              <p class="text productInfo"> {{ this.currentProduct.price }}</p>
+              <EditBtn :currentItemUID="currentProduct.id" itemToEdit="price"></EditBtn>
+            </div>
             <ButtonOn class="buttonOn">Agregar al carrito</ButtonOn>
           </div>
       </div>
@@ -41,6 +61,8 @@ export default {
 </template>
 
 <style lang="scss">
+@import "src/assets/main.scss";
+
 .product {
   margin: 0px;
   width: 100vw;
@@ -58,7 +80,10 @@ export default {
       flex-direction: column;
       justify-content: center;
     
-
+      &__part {
+        display: flex;
+        flex-direction: row;
+      }
     }
     
   }

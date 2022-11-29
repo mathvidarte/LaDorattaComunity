@@ -48,6 +48,11 @@ export default {
       width: 180px;
       cursor: pointer
     }
+
+    &.--square {
+      width: 40px;
+      cursor: pointer
+    }
 }
 
 

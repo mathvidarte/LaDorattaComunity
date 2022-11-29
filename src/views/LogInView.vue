@@ -79,11 +79,11 @@ export default {
       </form>
     </section>
 </div>
-<section class="logOut" v-else>
+<!--<section class="logOut" v-else>
     <RouterLink to="/menu">
         <ButtonOn type="button" class="button_on button_on--white logOutBtn" @click="logOut">Cerrar sesión</ButtonOn>
     </RouterLink>
-</section>
+</section>-->
 
 </template>
 

@@ -24,6 +24,9 @@ export default {
       orderNameSelected: "",
       selectedCategory: [],
       selectedFlavourSelected: [],
+
+      adminIn: false,
+      someoneHere: null,
     };
   },
 
@@ -31,6 +34,16 @@ export default {
     this.getAllProducts = this.productsStore.getProducts;
     this.currentProduct = JSON.parse(JSON.stringify(this.getAllProducts));
     this.arrayProductHere = this.currentProduct;
+
+    this.someoneHere = this.authenticationStore.loadCurrentUser();
+
+    if (this.someoneHere != null) {
+      if (this.someoneHere.admi) {
+        this.adminIn = true;
+      } else {
+        this.adminIn = false;
+      }
+    }
   },
 
   computed: {
@@ -38,18 +51,33 @@ export default {
     getProducts() {
       return this.productsStore.getProducts;
     },
-    userIsAdmin() {
-      return this.authenticationStore.user.tipo == "admin";
-    },
+
     userIsLogged() {
-      return this.authenticationStore.user !== null;
+      //return this.authenticationStore.user !== null;
+      if(this.authenticationStore.loadCurrentUser() != null) {
+        return this.authenticationStore.loadCurrentUser().admi
+      }
     },
+    
   },
 
   watch: {
     getProducts(newProduct, oldProduct) {
       if (newProduct.length !== 0) {
         this.getEverything();
+      }
+    },
+
+    userIsLogged(newUser, oldUser) {
+      //this.$router.push("/");
+      if (newUser == true) {
+        //this.$router.push("/");
+        this.adminIn = true;
+        //console.log("admin", newUser);
+      } else {
+        //this.$router.push("/");
+        //console.log("basico", newUser);
+        this.adminIn = false;
       }
     },
   },
@@ -143,6 +171,10 @@ export default {
         this.arrayProductHere = this.getAllProducts;
       }
     },
+
+    prueba(){
+      console.log("PRUEBA: ", this.userIsLogged , "var: ", this.adminIn);
+    }
   },
 };
 </script>
@@ -151,7 +183,7 @@ export default {
   <section class="banners"></section>
   <section class="ourProducts">
     <div class="ourProducts__header">
-      <h1 class="ourProducts__title title title--gold">Nuestros productos</h1>
+      <h1 @click="prueba" class="ourProducts__title title title--gold">Nuestros productos</h1>
 
       <div
         @change="filterCategory(this.selectedCategory)"
@@ -212,7 +244,7 @@ export default {
           <label for="donuts" @click="donuts">Donuts</label>
       </div>
       <RouterLink to="/addnew">
-        <ButtonOn v-if="userIsLogged">Agregar nuevo producto</ButtonOn>
+        <ButtonOn v-if="this.adminIn">Agregar nuevo producto</ButtonOn>
       </RouterLink>
     </div>
     <div class="ourProducts__body">
@@ -256,14 +288,7 @@ export default {
               <option value="menormayor">Menor a mayor</option>
             </select>
           </div>
-          <div class="filtersCategories">
-            <label>Calificación</label>
-            <select class="row__month">
-              <option>Ninguno</option>
-              <option>Mayor a mejor</option>
-              <option>Menor a mayor</option>
-            </select>
-          </div>
+          
           <div class="filtersCategories">
             <label>Nombre</label>
             <select
@@ -287,7 +312,7 @@ export default {
           :titlee="product.titlee"
           :category="product.category"
           :description="product.description"
-          :flavour="product.flavour"
+          :flavour="product.flavour[0]"
           :rating="product.rating"
           :price="product.price"
         >
@@ -311,6 +336,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 25px;
+  position: relative;
 
   &__header {
     display: flex;
@@ -339,7 +365,7 @@ export default {
     margin: 30px 0px;
 
     .filters {
-      position: relative;
+      position: absolute;
       background-color: $White;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
       width: 250px;
@@ -376,7 +402,7 @@ export default {
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 60px;
-    margin-left: 20px;
+    margin-left: 270px;
     border-left: 2px solid #cfced1;
     padding-left: 20px;
 
@@ -393,7 +419,7 @@ export default {
     &__header {
       .headerCategories {
         flex-direction: row;
-        flex-wrap: wrap;
+        justify-content: space-between;
         gap: 2px;
         margin: 20px 0px 0px 0px;
       }
@@ -402,6 +428,15 @@ export default {
     &__body {
       flex-direction: column;
       align-items: center;
+    }
+
+    .allProducts {
+      display:flex;
+      flex-direction: column;
+      margin: 380px 10px 0px 10px;
+      padding-left: 0px;
+      border-left: 0px solid #cfced1;
+      gap: 0px;
     }
   }
 }

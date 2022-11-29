@@ -35,7 +35,7 @@ export default {
     <div class="product" v-if="this.productInfo">
       <div class="product__container">
         <EditBtn></EditBtn>
-        <img :currentItemUID="currentProduct.id" itemToEdit="image" :src="this.currentProduct.image.url" class="product__img"/>
+        <img :currentItemUID="currentProduct.id" itemToEdit="image" :src="this.currentProduct.image.link" class="product__img"/>
           <div class="productText">
             <div class="productText__part">
               <h1 class="title title--gold productName">{{ this.currentProduct.titlee }}</h1>

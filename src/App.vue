@@ -10,14 +10,34 @@ export default {
 
   mounted() {
     this.productsStore.loadProducts();
+
+    this.someoneHere = this.authenticationStore.loadCurrentUser();
+
+    if (this.someoneHere != null) {
+      if (this.someoneHere.admi) {
+        this.adminIn = true;
+      } else {
+        this.adminIn = false;
+      }
+    }
   },
 
   computed: {
     ...mapStores(useProductsStore, useAuthenticationStore),
 
     userIsLogged() {
-      return this.authenticationStore.user !== null;
+      if(this.authenticationStore.loadCurrentUser() != null) {
+        return this.authenticationStore.loadCurrentUser().admi
+      }
     },
+
+    userNoAdminLogged() {
+        if(this.authenticationStore.loadCurrentUser() != null) {
+          return this.authenticationStore.loadCurrentUser()
+        }
+      }
+
+    
   },
 
   el: "#navbar",
@@ -27,6 +47,7 @@ export default {
         topOfPage: true,
       },
 
+      adminIn: false,
       menub: false,
     };
   },
@@ -59,11 +80,27 @@ export default {
   },
   watch: {
     userIsLogged(newUser, oldUser) {
-      console.log("...", newUser);
-      if (newUser) {
+      console.log(".............", newUser);
+      if (newUser == true) {
         this.$router.push("/");
+        this.adminIn = true;
+        console.log("adminnnnnn", newUser);
+      } else {
+        this.$router.push("/");
+        console.log("basicoooooo", newUser);
+        this.adminIn = false;
       }
     },
+
+    userNoAdminLogged(newNoAdmin, oldNoAdmin) {
+      if (newNoAdmin == true) {
+        this.$router.push("/");
+        console.log("adminnnnnn", newNoAdmin);
+      } else {
+        this.$router.push("/");
+        console.log("basicoooooo", newNoAdmin);
+      }
+    }
   },
 };
 </script>
@@ -85,7 +122,7 @@ export default {
         <input type="text" placeholder="Buscar" />
         <button type="button"><img src="/imgs/icons/search.svg" /></button>
       </div>
-      <div class="logging" v-if="!userIsLogged">
+      <div class="logging" v-if="!userIsLogged || !userNoAdminLogged">
         <RouterLink to="/logIn">
           <ButtonOn type="button" class="button_on button_on--small"
             >Iniciar sesión</ButtonOn

@@ -47,11 +47,13 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
-      const uid = user.uid;
       authStores.user=user;
+      authStores.getMyUser(user.uid)
+      console.log("HAY ALGUIEN") 
     } else {
       authStores.user=null;
-      console.log("User vacío",authStores.user)  
+      authStores.getMyUser(null)
+      console.log("NO HAY NADIE") 
     }
   });
 

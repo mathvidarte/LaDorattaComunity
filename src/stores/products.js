@@ -87,7 +87,6 @@ export const useProductsStore = defineStore("products", {
                         id: document.id,
                     };
                     this.products.push(this.product);
-                    console.log("imageeeeeeeeeeee LOADD: ",this.product.image);
 
 
                     updateDoc(doc(db, "product", document.id), this.product);

@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, deleteUser } from "firebase/auth";
 import { db, auth } from '../firebase/config';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 
 export const useAuthenticationStore = defineStore("authentication", {
     state: () => ({
         user: {},
+        currentUser: null,
         
     }),
     actions: {
@@ -52,6 +53,7 @@ export const useAuthenticationStore = defineStore("authentication", {
             signOut(auth)
                 .then(() => {
                     console.log("usuario fuera")
+
                 }).catch((error => {
                     alert.error;
                 }))
@@ -65,6 +67,29 @@ export const useAuthenticationStore = defineStore("authentication", {
                 // An error ocurred
                 // ...
               });
-        }
+              
+        },
+        
+        getMyUser(currentUid) {
+            if (currentUid != null) {
+                onSnapshot(doc(db, "users", currentUid), docSnapshot => {
+                    this.currentUser = docSnapshot.data();
+                    //console.log("ww",this.currentUser)
+                });
+            } else {
+                return null
+            }
+        },
+
+        loadCurrentUser() {
+            if (this.currentUser != null) {
+                //console.log(this.currentUser.admi)
+                return this.currentUser;
+            } else {
+                return null
+            }
+        },
+
+
     }
 })

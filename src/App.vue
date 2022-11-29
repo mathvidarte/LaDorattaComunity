@@ -206,6 +206,34 @@ export default {
         </RouterLink>
       </li>
     </ul>
+    <div class="logging" v-if="!userIsLogged || !userNoAdminLogged">
+        <RouterLink to="/logIn">
+          <ButtonOn type="button" class="button_on button_on--small responsive"
+            >Iniciar sesión</ButtonOn
+          >
+        </RouterLink>
+        <RouterLink to="/signUp">
+          <ButtonOn type="button" class="button_on button_on--small responsive"
+            >Registrarse</ButtonOn
+          >
+        </RouterLink>
+      </div>
+      <div class="logging" v-else>
+        <!--<RouterLink to="/">-->
+        <ButtonOn
+          type="button"
+          class="button_on button_on--white logOutBtn"
+          @click="logOut"
+          >Cerrar sesión</ButtonOn
+        >
+        <ButtonOn
+          type="button"
+          class="button_on button_on--white logOutBtn"
+          @click="deleteUser"
+          >Eliminar cuenta</ButtonOn
+        >
+        <!--</RouterLink>-->
+      </div>
   </div>
 
   <RouterView />

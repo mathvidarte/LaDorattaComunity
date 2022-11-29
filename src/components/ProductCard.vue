@@ -34,11 +34,11 @@ export default {
       :key="this.titlee"
       :to="`/detail/${this.titlee}`"
     >
-      <img class="card__img" :src="this.image.url" />
+      <img class="card__img" :src="this.image" />
       <h3 class="card__title">{{ this.titlee }}</h3>
       <p class="card__category">{{ this.category }}</p>
       <p class="card__description">{{ this.description }}</p>
-      <p class="card__category">{{this.flavour[0]}}</p>
+      <p class="card__category">{{this.flavour}}</p>
       <p class="card__rating">🤩 {{ this.rating }}</p>
       <p class="card__price">${{ this.price }}</p>
     </RouterLink>

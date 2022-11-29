@@ -30,7 +30,7 @@ export default {
         class="carrusel"
         :cards="[
           {
-            image: '../public/imgs/redvelvet.png',
+            image: '/imgs/redvelvet.png',
             titlee: 'Red Velvet Queen',
             category: 'Cake',
             description:
@@ -39,7 +39,7 @@ export default {
             price: '25.000',
           },
           {
-            image: '../public/imgs/mariposas.png',
+            image: '/imgs/mariposas.png',
             titlee: 'Mariposas Cake',
             category: 'Cake',
             description:
@@ -48,7 +48,7 @@ export default {
             price: '25.000',
           },
           {
-            image: '../public/imgs/lemoncake1.png',
+            image: '/imgs/lemoncake1.png',
             titlee: 'Lemon Cake',
             category: 'Cake',
             description:
@@ -57,7 +57,7 @@ export default {
             price: '35.000',
           },
           {
-            image: '../public/imgs/redvelvet.png',
+            image: '/imgs/redvelvet.png',
             titlee: 'Red Velvet Queen',
             category: 'Cake',
             description:
@@ -66,7 +66,7 @@ export default {
             price: '25.000',
           },
           {
-            image: '../public/imgs/mariposas.png',
+            image: '/imgs/mariposas.png',
             titlee: 'Mariposas Cake',
             category: 'Cake',
             description:
@@ -75,7 +75,7 @@ export default {
             price: '25.000',
           },
           {
-            image: '../public/imgs/lemoncake1.png',
+            image: '/imgs/lemoncake1.png',
             titlee: 'Lemon Cake',
             category: 'Cake',
             description:

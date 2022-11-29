@@ -283,7 +283,7 @@ export default {
           class="cards"
           v-for="product in arrayProductHere"
           :key="product"
-          :image="product.image"
+          :image="product.image.link"
           :titlee="product.titlee"
           :category="product.category"
           :description="product.description"

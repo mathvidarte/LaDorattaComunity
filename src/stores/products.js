@@ -26,8 +26,8 @@ export const useProductsStore = defineStore("products", {
     //En actions estan los metodos de lo que necesito
     actions: {
         async newProduct(product) {
-            console.log("Que hay)", product)
             this.imageinfo = product.image
+
             try {
                 const docRef = await addDoc(collection(db, "product"), {
                     image: product.image,
@@ -45,19 +45,19 @@ export const useProductsStore = defineStore("products", {
                 getDownloadURL(storageRef)
                     .then(async (url) => {
                         try {
-                            let imgName = product.image;
-                            console.log("imagennnnnnn", imgName)
-                            this.imageinfo = {
 
-                                url,
-                                imgName,
-                            }
-                            console.log(this.imageinfo),
+                            var imgBoth = {
+                                name: product.image,
+                                link: url,
+                            };
 
-                                updateDoc(doc(db, "product", docRef.id), {
-                                    "image": this.imageinfo,
+                            
+                            updateDoc(doc(db, "product", docRef.id), {
+                                "image": imgBoth,
+                            });
 
-                                });
+                            console.log("image BOTH: ",this.imageinfo);
+
                         } catch (e) {
                             console.error("Error adding document: ", e);
                         }
@@ -71,7 +71,7 @@ export const useProductsStore = defineStore("products", {
 
         loadProducts() {
 
-            onSnapshot(collection(db, "product"), (docs) => {
+            onSnapshot(collection(db, "product"), docs => {
                 this.products = [];
 
                 docs.forEach((document) => {
@@ -87,6 +87,8 @@ export const useProductsStore = defineStore("products", {
                         id: document.id,
                     };
                     this.products.push(this.product);
+                    console.log("imageeeeeeeeeeee LOADD: ",this.product.image);
+
 
                     updateDoc(doc(db, "product", document.id), this.product);
                 })
